@@ -27,7 +27,6 @@ Rules are simple:
 Hope you enjoy it!"""
 # =================================================================
 winningScore = 0
-scoredRounds = 0
 totalGameRounds = 0
 # =================================================================
 print('\n' + '*' * 62)
@@ -42,22 +41,22 @@ while True:
         print('+' * 62)
         break
     if inp.lower() == 'y':
-        proceed = True
+
         # user selected YES the game process starts:
-        while proceed:
+        while True:
             winningScore = input('\nPlease type in a value for the winning score: ')
             if not winningScore.isdigit():
                 print('I need an integer to carry on. Please type in an \"integer\" value')
                 continue
-
+            if not int(winningScore):
+                print('I need a "NON ZERO" integer to carry on. Please type in a \"non-zero integer\" value')
+                continue
             else:
                 winningScore = abs(int(winningScore))
-                if not winningScore:
-                    print('I need a "NON ZERO" integer to carry on. Please type in a \"non-zero integer\" value')
-                    continue
+                getChoice = True
 
                 # user entered winningScore, start to get choices:
-                while True:
+                while getChoice:
                     rockCount = 0
                     paperCount = 0
                     scissorsCount = 0
@@ -85,47 +84,46 @@ while True:
                         continue
 
                     # the entry is valid. let's see which one it is:
+                    if quitCount:  # Quit choice scenario
+                        print('\n' + '+' * 62)
+                        if not totalGameRounds:
+                            print('Hope you play another time!')
+                        else:
+                            print('Thank you for playing this game. I really enjoyed it!')
+                        print('+' * 62)
+                        quit()
+
+                    # the entry is not quit, and it's a game choice.
+                    compChoice = random.choice(compChoicesTuple)
+                    totalGameRounds += 1
+
+                    # want to finalize userChoice from the userEntry:
+                    if rockCount:
+                        userChoice = 'rock'
+                    elif paperCount:
+                        userChoice = 'paper'
                     else:
-                        if quitCount:  # Quit choice scenario
-                            print('\n' + '+' * 62)
-                            if not totalGameRounds:
-                                print('Hope you play another time!')
-                            else:
-                                print('Thank you for playing this game. I really enjoyed it!')
-                            print('+' * 62)
-                            quit()
+                        userChoice = 'scissors'
 
-                        # the entry is not quit, and it's a game choice.
-                        compChoice = random.choice(compChoicesTuple)
-                        totalGameRounds += 1
+                    # find the winner of current round:
+                    print('\n' + '=' * 62)
+                    if userChoice == compChoice:
+                        print(tieMessage)
+                    elif (userChoice == 'rock' and compChoice == 'scissors') or \
+                            (userChoice == 'paper' and compChoice == 'rock') or \
+                            (userChoice == 'scissors' and compChoice == 'paper'):
+                        print(userWinMessage)
+                        userWinCount += 1
+                    else:
+                        print(compWinMessage)
+                        compWinCount += 1
 
-                        # want to finalize userChoice from the userEntry:
-                        if rockCount:
-                            userChoice = 'rock'
-                        elif paperCount:
-                            userChoice = 'paper'
-                        else:
-                            userChoice = 'scissors'
+                    print('I had: \"{}\" and your choice was: \"{}\"'.format(validChoices[compChoice],
+                                                                             validChoices[userChoice]))
+                    print('=' * 62 + '\n')
 
-                        # find the winner of current round:
-                        print('\n' + '=' * 62)
-                        if userChoice == compChoice:
-                            print(tieMessage)
-                        elif (userChoice == 'rock' and compChoice == 'scissors') or \
-                                (userChoice == 'paper' and compChoice == 'rock') or \
-                                (userChoice == 'scissors' and compChoice == 'paper'):
-                            print(userWinMessage)
-                            userWinCount += 1
-                        else:
-                            print(compWinMessage)
-                            compWinCount += 1
-
-                        print('I had: \"{}\" and your choice was: \"{}\"'.format(validChoices[compChoice],
-                                                                                 validChoices[userChoice]))
-                        print('=' * 62 + '\n')
-
-                        print('Computer Score is : \'{}\''.format(compWinCount))
-                        print('User Score is : \'{}\''.format(userWinCount))
+                    print('Computer Score is : \'{}\''.format(compWinCount))
+                    print('User Score is : \'{}\''.format(userWinCount))
 
                     # the condition of reaching winning score:
                     if userWinCount == winningScore or compWinCount == winningScore:
@@ -136,20 +134,18 @@ while True:
                             print('Woohoo, I have won the game')
                         print('*' * 62)
 
+                        # ask if the user wants to play again:
                         while True:
                             proceedGame = input('\nDo you want to play again? (Y/N): ')
                             if proceedGame.lower() == 'n':
                                 print('\n' + '+' * 62)
                                 print('Hope you play this game another time :)')
                                 print('+' * 62)
-                                proceed = False
-                                break
+                                quit()
 
                             if proceedGame.lower() == 'y':
                                 userWinCount = 0
                                 compWinCount = 0
                                 winningScore = 0
-                                scoredRounds = 0
-                                proceed = True
+                                getChoice = False
                                 break
-                        break
