@@ -139,7 +139,7 @@ while True:
                             proceedGame = input('\nDo you want to play again? (Y/N): ')
                             if proceedGame.lower() == 'n':
                                 print('\n' + '+' * 62)
-                                print('Hope you play this game another time :)')
+                                print('Thank you for playing this game. I really enjoyed it!')
                                 print('+' * 62)
                                 quit()
 
